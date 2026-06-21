@@ -1,3 +1,4 @@
+const cors = require('cors');
 require('dotenv').config();
 const express = require('express');
 const AppError = require('./utils/AppError');
@@ -5,6 +6,7 @@ const watchlistRoutes = require('./routes/watchlist.routes');
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 const PORT = process.env.PORT || 5000;
 

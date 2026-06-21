@@ -1,24 +1,5 @@
 {
-  "name": "60-backend",
-  "version": "1.0.0",
-  "description": "backend",
-  "main": "day1.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jeenatamang/60-backend.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/jeenatamang/60-backend/issues"
-  },
-  "homepage": "https://github.com/jeenatamang/60-backend#readme",
   "dependencies": {
-    "uuid": "^14.0.0"
+    "cors": "^2.8.6"
   }
 }

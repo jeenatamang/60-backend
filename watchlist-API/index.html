@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watchlist</title>
+<style>
+  :root {
+    --bg: #14141c;
+    --surface: #1d1d28;
+    --surface-2: #25252f;
+    --border: #34343f;
+    --text: #f0efe9;
+    --text-dim: #9b9aa8;
+    --accent: #ff6b4a;
+    --accent-dim: #4a2f26;
+    --plan: #6b7280;
+    --watching: #e0a83f;
+    --completed: #4caf7d;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+  header {
+    margin-bottom: 40px;
+  }
+  .eyebrow {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 8px;
+  }
+  h1 {
+    font-size: 36px;
+    font-weight: 400;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+  .sub {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    color: var(--text-dim);
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .stats {
+    display: flex;
+    gap: 24px;
+    margin: 28px 0 36px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+  }
+  .stat { display: flex; flex-direction: column; gap: 2px; }
+  .stat-num { font-size: 22px; font-weight: 600; }
+  .stat-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  form#add-form {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+  }
+  input, select {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  input[name="title"] { flex: 1; min-width: 180px; }
+  button {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  button:active { transform: scale(0.97); }
+  .btn-primary {
+    background: var(--accent);
+    color: #1a1006;
+  }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { color: var(--text); border-color: var(--text-dim); }
+
+  .filters {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+  }
+  .filter-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 100px;
+  }
+  .filter-btn.active {
+    background: var(--surface-2);
+    color: var(--text);
+    border-color: var(--text-dim);
+  }
+
+  .list { display: flex; flex-direction: column; gap: 10px; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .card-main { flex: 1; min-width: 0; }
+  .card-title {
+    font-size: 17px;
+    margin: 0 0 4px;
+  }
+  .card-meta {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .type-tag {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 10px;
+  }
+  .status-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    display: inline-block;
+  }
+  .status-dot.plan_to_watch { background: var(--plan); }
+  .status-dot.watching { background: var(--watching); }
+  .status-dot.completed { background: var(--completed); }
+
+  .rating {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .status-select {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+  .icon-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    font-size: 16px;
+    padding: 4px 8px;
+  }
+  .icon-btn:hover { color: var(--accent); }
+
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-dim);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px;
+    padding: 12px 18px;
+    border-radius: 8px;
+    opacity: 0;
+    transition: opacity 0.25s, transform 0.25s;
+    pointer-events: none;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .toast.error { border-color: #a33; color: #ff9b8c; }
+
+  ::placeholder { color: #6e6d7a; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Day 21 bonus project</p>
+    <h1>My watchlist</h1>
+    <p class="sub">Track what you're watching, finished, and rate it once it's done.</p>
+  </header>
+
+  <div class="stats" id="stats"></div>
+
+  <form id="add-form">
+    <input type="text" name="title" placeholder="Add a title, e.g. Demon Slayer" required>
+    <select name="type">
+      <option value="anime">Anime</option>
+      <option value="movie">Movie</option>
+      <option value="series">Series</option>
+    </select>
+    <button type="submit" class="btn-primary">Add</button>
+  </form>
+
+  <div class="filters" id="filters">
+    <button class="filter-btn active" data-status="">All</button>
+    <button class="filter-btn" data-status="plan_to_watch">Plan to watch</button>
+    <button class="filter-btn" data-status="watching">Watching</button>
+    <button class="filter-btn" data-status="completed">Completed</button>
+  </div>
+
+  <div class="list" id="list"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API_BASE = 'http://localhost:5000/watchlist';
+let currentFilter = '';
+let items = [];
+
+const listEl = document.getElementById('list');
+const statsEl = document.getElementById('stats');
+const toastEl = document.getElementById('toast');
+const form = document.getElementById('add-form');
+const filtersEl = document.getElementById('filters');
+
+function showToast(message, isError = false) {
+  toastEl.textContent = message;
+  toastEl.className = 'toast show' + (isError ? ' error' : '');
+  setTimeout(() => { toastEl.className = 'toast'; }, 2500);
+}
+
+function statusLabel(status) {
+  return { plan_to_watch: 'Plan to watch', watching: 'Watching', completed: 'Completed' }[status] || status;
+}
+
+async function fetchItems() {
+  try {
+    const url = currentFilter ? `${API_BASE}?status=${currentFilter}` : API_BASE;
+    const res = await fetch(url);
+    const json = await res.json();
+    if (!json.success) throw new Error(json.message);
+    items = json.data;
+    render();
+  } catch (err) {
+    showToast(`Couldn't load watchlist: ${err.message}`, true);
+  }
+}
+
+function render() {
+  renderStats();
+  if (items.length === 0) {
+    listEl.innerHTML = `<div class="empty">Nothing here yet. Add a title above to get started.</div>`;
+    return;
+  }
+  listEl.innerHTML = items.map(item => `
+    <div class="card" data-id="${item.id}">
+      <div class="card-main">
+        <p class="card-title">${escapeHtml(item.title)}</p>
+        <div class="card-meta">
+          <span class="type-tag">${item.type}</span>
+          <span class="status-dot ${item.status}"></span>
+          <span>${statusLabel(item.status)}</span>
+          ${item.rating ? `<span class="rating">★ ${item.rating}/10</span>` : ''}
+        </div>
+      </div>
+      <div class="card-actions">
+        <select class="status-select" onchange="updateStatus(${item.id}, this.value)">
+          <option value="plan_to_watch" ${item.status === 'plan_to_watch' ? 'selected' : ''}>Plan to watch</option>
+          <option value="watching" ${item.status === 'watching' ? 'selected' : ''}>Watching</option>
+          <option value="completed" ${item.status === 'completed' ? 'selected' : ''}>Completed</option>
+        </select>
+        ${item.status === 'completed' ? `<button class="icon-btn" title="Rate" onclick="promptRate(${item.id})">★</button>` : ''}
+        <button class="icon-btn" title="Delete" onclick="deleteItem(${item.id})">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderStats() {
+  const total = items.length;
+  const watching = items.filter(i => i.status === 'watching').length;
+  const completed = items.filter(i => i.status === 'completed').length;
+  const rated = items.filter(i => i.rating);
+  const avg = rated.length ? (rated.reduce((s, i) => s + i.rating, 0) / rated.length).toFixed(1) : '—';
+
+  statsEl.innerHTML = `
+    <div class="stat"><span class="stat-num">${total}</span><span class="stat-label">Total</span></div>
+    <div class="stat"><span class="stat-num">${watching}</span><span class="stat-label">Watching</span></div>
+    <div class="stat"><span class="stat-num">${completed}</span><span class="stat-label">Completed</span></div>
+    <div class="stat"><span class="stat-num">${avg}</span><span class="stat-label">Avg rating</span></div>
+  `;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(form);
+  const title = formData.get('title').trim();
+  const type = formData.get('type');
+  if (!title) return;
+
+  try {
+    const res = await fetch(API_BASE, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, type })
+    });
+    const json = await res.json();
+    if (!json.success) throw new Error(json.message);
+    form.reset();
+    showToast(`Added "${title}"`);
+    fetchItems();
+  } catch (err) {
+    showToast(err.message, true);
+  }
+});
+
+async function updateStatus(id, status) {
+  try {
+    const res = await fetch(`${API_BASE}/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
+    });
+    const json = await res.json();
+    if (!json.success) throw new Error(json.message);
+    showToast(`Marked as ${statusLabel(status).toLowerCase()}`);
+    fetchItems();
+  } catch (err) {
+    showToast(err.message, true);
+    fetchItems();
+  }
+}
+
+async function promptRate(id) {
+  const rating = prompt('Rate this out of 10:');
+  if (rating === null) return;
+  const num = Number(rating);
+  if (!num || num < 1 || num > 10) {
+    showToast('Rating must be a number between 1 and 10', true);
+    return;
+  }
+  try {
+    const res = await fetch(`${API_BASE}/${id}/rate`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rating: num })
+    });
+    const json = await res.json();
+    if (!json.success) throw new Error(json.message);
+    showToast(`Rated ${num}/10`);
+    fetchItems();
+  } catch (err) {
+    showToast(err.message, true);
+  }
+}
+
+async function deleteItem(id) {
+  if (!confirm('Remove this from your watchlist?')) return;
+  try {
+    const res = await fetch(`${API_BASE}/${id}`, { method: 'DELETE' });
+    const json = await res.json();
+    if (!json.success) throw new Error(json.message);
+    showToast('Removed');
+    fetchItems();
+  } catch (err) {
+    showToast(err.message, true);
+  }
+}
+
+filtersEl.addEventListener('click', (e) => {
+  if (!e.target.classList.contains('filter-btn')) return;
+  [...filtersEl.children].forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
+  currentFilter = e.target.dataset.status;
+  fetchItems();
+});
+
+fetchItems();
+</script>
+</body>
+</html>
