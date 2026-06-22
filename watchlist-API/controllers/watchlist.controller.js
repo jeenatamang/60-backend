@@ -1,18 +1,14 @@
 const watchlist = require('../data/watchlist.data');
 const AppError = require('../utils/AppError');
 
-const VALID_STATUSES = ["plan_to_watch", "watching", "completed"];
-const VALID_TYPES = ["movie", "anime", "series"];
-
+// GET all items — supports ?status=watching filtering
 exports.getAll = (req, res, next) => {
   try {
     const { status } = req.query;
     let result = watchlist;
-
     if (status) {
       result = watchlist.filter(item => item.status === status);
     }
-
     res.status(200).json({
       success: true,
       message: "Watchlist fetched successfully",
@@ -22,12 +18,12 @@ exports.getAll = (req, res, next) => {
     next(err);
   }
 };
+
+// GET one item
 exports.getOne = (req, res, next) => {
   try {
     const item = watchlist.find(i => i.id === parseInt(req.params.id));
-    if (!item) {
-      throw new AppError("Item not found", 404);
-    }
+    if (!item) throw new AppError("Item not found", 404);
     res.status(200).json({
       success: true,
       message: "Item fetched successfully",
@@ -38,25 +34,15 @@ exports.getOne = (req, res, next) => {
   }
 };
 
+// CREATE — validation already handled by middleware
 exports.create = (req, res, next) => {
   try {
-    const { title, type, status } = req.body;
-
-    if (!title || !type) {
-      throw new AppError("Title and type are required", 400);
-    }
-    if (!VALID_TYPES.includes(type)) {
-      throw new AppError(`Type must be one of: ${VALID_TYPES.join(", ")}`, 400);
-    }
-    if (status && !VALID_STATUSES.includes(status)) {
-      throw new AppError(`Status must be one of: ${VALID_STATUSES.join(", ")}`, 400);
-    }
-
+    const { title, type } = req.body;
     const newItem = {
       id: watchlist.length + 1,
       title,
       type,
-      status: status || "plan_to_watch",
+      status: "plan_to_watch",
       rating: null
     };
     watchlist.push(newItem);
@@ -69,22 +55,15 @@ exports.create = (req, res, next) => {
     next(err);
   }
 };
+
+// UPDATE — validation already handled by middleware
 exports.update = (req, res, next) => {
   try {
     const item = watchlist.find(i => i.id === parseInt(req.params.id));
-    if (!item) {
-      throw new AppError("Item not found", 404);
-    }
-
+    if (!item) throw new AppError("Item not found", 404);
     const { title, status } = req.body;
-
-    if (status && !VALID_STATUSES.includes(status)) {
-      throw new AppError(`Status must be one of: ${VALID_STATUSES.join(", ")}`, 400);
-    }
-
     if (title) item.title = title;
     if (status) item.status = status;
-
     res.status(200).json({
       success: true,
       message: "Item updated successfully",
@@ -94,22 +73,16 @@ exports.update = (req, res, next) => {
     next(err);
   }
 };
+
+// RATE — validation already handled by middleware
 exports.rate = (req, res, next) => {
   try {
     const item = watchlist.find(i => i.id === parseInt(req.params.id));
-    if (!item) {
-      throw new AppError("Item not found", 404);
-    }
+    if (!item) throw new AppError("Item not found", 404);
     if (item.status !== "completed") {
       throw new AppError("You can only rate completed items", 400);
     }
-
-    const { rating } = req.body;
-    if (rating === undefined || rating < 1 || rating > 10) {
-      throw new AppError("Rating must be a number between 1 and 10", 400);
-    }
-
-    item.rating = rating;
+    item.rating = req.body.rating;
     res.status(200).json({
       success: true,
       message: "Rating saved",
@@ -119,12 +92,12 @@ exports.rate = (req, res, next) => {
     next(err);
   }
 };
+
+// DELETE
 exports.remove = (req, res, next) => {
   try {
     const index = watchlist.findIndex(i => i.id === parseInt(req.params.id));
-    if (index === -1) {
-      throw new AppError("Item not found", 404);
-    }
+    if (index === -1) throw new AppError("Item not found", 404);
     watchlist.splice(index, 1);
     res.status(200).json({
       success: true,
