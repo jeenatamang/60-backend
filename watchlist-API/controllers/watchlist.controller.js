@@ -1,7 +1,5 @@
 const watchlist = require('../data/watchlist.data');
 const AppError = require('../utils/AppError');
-
-// GET all items — supports ?status=watching filtering
 exports.getAll = (req, res, next) => {
   try {
     const { status } = req.query;
@@ -18,8 +16,6 @@ exports.getAll = (req, res, next) => {
     next(err);
   }
 };
-
-// GET one item
 exports.getOne = (req, res, next) => {
   try {
     const item = watchlist.find(i => i.id === parseInt(req.params.id));
@@ -33,8 +29,6 @@ exports.getOne = (req, res, next) => {
     next(err);
   }
 };
-
-// CREATE — validation already handled by middleware
 exports.create = (req, res, next) => {
   try {
     const { title, type } = req.body;
@@ -56,7 +50,6 @@ exports.create = (req, res, next) => {
   }
 };
 
-// UPDATE — validation already handled by middleware
 exports.update = (req, res, next) => {
   try {
     const item = watchlist.find(i => i.id === parseInt(req.params.id));
@@ -73,8 +66,6 @@ exports.update = (req, res, next) => {
     next(err);
   }
 };
-
-// RATE — validation already handled by middleware
 exports.rate = (req, res, next) => {
   try {
     const item = watchlist.find(i => i.id === parseInt(req.params.id));
@@ -92,8 +83,6 @@ exports.rate = (req, res, next) => {
     next(err);
   }
 };
-
-// DELETE
 exports.remove = (req, res, next) => {
   try {
     const index = watchlist.findIndex(i => i.id === parseInt(req.params.id));
