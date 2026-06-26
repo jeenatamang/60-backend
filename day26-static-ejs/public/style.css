@@ -1,0 +1,23 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  background: #14141c;
+  color: #f0efe9;
+  padding: 40px 24px;
+}
+h1 { font-size: 32px; margin-bottom: 8px; }
+p { color: #9b9aa8; margin-bottom: 24px; }
+a {
+  color: #ff6b4a;
+  text-decoration: none;
+  font-weight: 500;
+}
+a:hover { text-decoration: underline; }
+.card {
+  background: #1d1d28;
+  border: 1px solid #34343f;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 12px;
+  max-width: 500px;
+}

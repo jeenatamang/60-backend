@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Watchlist</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <h1>My Watchlist</h1>
+  <p>Total items: <%= items.length %></p>
+
+  <% if (items.length === 0) { %>
+    <p>Nothing in your watchlist yet.</p>
+  <% } else { %>
+    <% items.forEach(item => { %>
+      <div class="card">
+        <strong><%= item.title %></strong>
+        <p><%= item.type %> - <%= item.status %></p>
+        <% if (item.rating) { %>
+          <p>Rating: <%= item.rating %>/10</p>
+        <% } %>
+      </div>
+    <% }) %>
+  <% } %>
+
+  <br>
+  <a href="/home">← Back</a>
+</body>
+</html>
