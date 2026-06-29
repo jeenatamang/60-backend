@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Expense Tracker API</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background: #14141c;
+      color: #f0efe9;
+      padding: 48px 24px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    h1 { font-size: 28px; margin-bottom: 8px; }
+    p { color: #9b9aa8; margin-bottom: 32px; font-size: 14px; }
+    .route {
+      background: #1d1d28;
+      border: 1px solid #34343f;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .method {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      min-width: 52px;
+      text-align: center;
+    }
+    .get { background: #1a3a2a; color: #4caf7d; }
+    .post { background: #1a2a3a; color: #4a9eff; }
+    .patch { background: #2a2a1a; color: #e0a83f; }
+    .delete { background: #3a1a1a; color: #ff6b4a; }
+    .url { font-size: 13px; color: #f0efe9; font-family: monospace; }
+    .desc { font-size: 12px; color: #9b9aa8; margin-left: auto; }
+    h2 { font-size: 14px; color: #9b9aa8; margin: 24px 0 12px;
+    text-transform: uppercase; letter-spacing: 0.08em; }
+    a { color: #ff6b4a; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <h1> Expense Tracker API</h1>
+  <p>A RESTful API built with Node.js + Express. All routes below.</p>
+
+  <h2>Expenses</h2>
+  <div class="route"><span class="method get">GET</span><span class="url">/expenses</span><span class="desc">Get all</span></div>
+  <div class="route"><span class="method get">GET</span><span class="url">/expenses?category=food</span><span class="desc">Filter</span></div>
+  <div class="route"><span class="method get">GET</span><span class="url">/expenses?sort=desc</span><span class="desc">Sort</span></div>
+  <div class="route"><span class="method get">GET</span><span class="url">/expenses/:id</span><span class="desc">Get one</span></div>
+  <div class="route"><span class="method post">POST</span><span class="url">/expenses</span><span class="desc">Create</span></div>
+  <div class="route"><span class="method patch">PATCH</span><span class="url">/expenses/:id</span><span class="desc">Update</span></div>
+  <div class="route"><span class="method delete">DELETE</span><span class="url">/expenses/:id</span><span class="desc">Delete</span></div>
+
+  <h2>Extra</h2>
+  <div class="route"><span class="method get">GET</span><span class="url">/expenses/summary</span><span class="desc">By category</span></div>
+  <div class="route"><span class="method get">GET</span><span class="url"><a href="/expenses/export">/expenses/export</a></span><span class="desc">Download CSV</span></div>
+</body>
+</html>
