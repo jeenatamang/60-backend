@@ -1,1 +1,3 @@
-backend
+This repo features learning backend development, following a YouTube course on Node.js, Express, and MongoDB. It has every project I've built along the way. It starts with the basics: creating servers, routing, middleware, and error handling, then moves into request validation, file uploads, and proper project structure with routes, controllers, and validators. From there it gets into a few complete mini projects: a Notes API, a Watchlist tracker with a working frontend, an Expense Tracker with CSV export, and a Trivia Quiz game.
+Each folder is a separate project, and most include their own setup instructions inside.
+Still in progress. MongoDB, authentication, more project are coming up next.
