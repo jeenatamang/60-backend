@@ -1,5 +1,6 @@
-require('dotenv').config();
-const express = require('express');
+import 'dotenv/config';
+import express from 'express';
+
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -35,5 +36,3 @@ app.post('/data', authCheck, (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-

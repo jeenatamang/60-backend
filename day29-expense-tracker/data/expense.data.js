@@ -25,4 +25,4 @@ let expenses = [
   }
 ];
 
-module.exports = expenses;
+export default expenses;

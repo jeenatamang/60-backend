@@ -14,12 +14,12 @@ let watchlist = [
     rating: null
   },
   {
-     id: 3,
+    id: 3,
     title: "Peaky Blinders",
     type: "series",
     status: "plan-to-watch",
     rating: null
   }
 ];
-module.exports = watchlist;
 
+export default watchlist;

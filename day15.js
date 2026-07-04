@@ -1,5 +1,6 @@
-const express = require('express');
-const fs = require('fs'); 
+import express from 'express';
+import fs from 'fs';
+
 const app = express();
 
 app.use(express.json());
@@ -14,5 +15,3 @@ app.post('/save', (req, res) => {
 app.listen(3000, () => {
     console.log('Database server active on port 3000');
 });
-
-

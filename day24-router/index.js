@@ -1,7 +1,7 @@
-require('dotenv').config();
-const express = require('express');
-const userRoutes = require('./routes/users.routes');
-const productRoutes = require('./routes/products.routes');
+import 'dotenv/config';
+import express from 'express';
+import userRoutes from './routes/users.routes.js';
+import productRoutes from './routes/products.routes.js';
 
 const app = express();
 app.use(express.json());
@@ -22,4 +22,3 @@ app.listen(PORT, () => {
   console.log(`  → http://localhost:${PORT}/users`);
   console.log(`  → http://localhost:${PORT}/products`);
 });
-

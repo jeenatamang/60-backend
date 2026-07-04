@@ -1,4 +1,4 @@
-const http = require('http');
+import http from 'http';
 
 const server = http.createServer((req, res) => {
     // log the request method and the user's browser details

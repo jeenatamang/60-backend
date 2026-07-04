@@ -1,7 +1,11 @@
-const express = require('express');
-const path = require('path');
-const AppError = require('./utils/AppError');
-const expenseRoutes = require('./routes/expense.routes');
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import AppError from './utils/Apperror.js';
+import expenseRoutes from './routes/expense.routes.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -27,4 +31,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-module.exports = app;
+export default app;

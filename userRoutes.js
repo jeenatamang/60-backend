@@ -1,5 +1,6 @@
 // userRoutes.js: A mini router just for user endpoints
-const express = require('express');
+import express from 'express';
+
 const router = express.Router();
 
 // This handles: GET /users/
@@ -12,6 +13,4 @@ router.get('/profile', (req, res) => {
     res.send('User profile dashboard details');
 });
 
-module.exports = router;
-
-
+export default router;

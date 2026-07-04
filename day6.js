@@ -1,4 +1,4 @@
-const http = require('http');
+import http from 'http';
 
 const server = http.createServer((req, res) => {
     if (req.method === 'POST' && req.url === '/data') {
@@ -21,5 +21,3 @@ const server = http.createServer((req, res) => {
 server.listen(3000, () => {
     console.log('server listening on 3000...');
 });
-
-

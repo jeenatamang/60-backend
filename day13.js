@@ -1,4 +1,5 @@
-const express = require('express');
+import express from 'express';
+
 const app = express();
 
 app.get('/', (req, res) => {
@@ -18,6 +19,3 @@ app.use((err, req, res, next) => {
 app.listen(3000, () => {
     console.log('Error-secure server running on port 3000');
 });
-
-
-

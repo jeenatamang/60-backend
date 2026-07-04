@@ -1,4 +1,5 @@
-const express = require('express');
+import express from 'express';
+
 const router = express.Router();
 
 let products = [
@@ -37,4 +38,4 @@ router.delete('/:id', (req, res) => {
   res.status(200).json({ success: true, message: "Product deleted" });
 });
 
-module.exports = router;
+export default router;

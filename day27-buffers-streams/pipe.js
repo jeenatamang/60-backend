@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'fs';
 
 const readStream = fs.createReadStream('./sample.txt');
 
@@ -9,4 +9,3 @@ writeStream.on('finish', () => {
   console.log('File copied successfully using streams!');
   console.log('Check sample-copy.txt in your folder.');
 });
-

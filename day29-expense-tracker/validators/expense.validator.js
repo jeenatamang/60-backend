@@ -1,8 +1,8 @@
-const { body } = require('express-validator');
+import { body } from 'express-validator';
 
 const VALID_CATEGORIES = ['food', 'transport', 'entertainment', 'health', 'education', 'other'];
 
-exports.createExpense = [
+export const createExpense = [
   body('title')
     .trim()
     .notEmpty()
@@ -35,7 +35,7 @@ exports.createExpense = [
     .withMessage('Note must be under 200 characters')
 ];
 
-exports.updateExpense = [
+export const updateExpense = [
   body('title')
     .optional()
     .trim()

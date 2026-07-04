@@ -1,7 +1,7 @@
-const express = require('express');
-const app = express();
+import express from 'express';
+import userRoutes from './userRoutes.js';
 
-const userRoutes = require('./userRoutes');
+const app = express();
 app.use('/users', userRoutes);
 
 app.get('/', (req, res) => {
@@ -10,6 +10,3 @@ app.get('/', (req, res) => {
 app.listen(3000, () => {
     console.log('Modular server running on port 3000');
 });
-
-
-

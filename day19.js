@@ -1,6 +1,6 @@
-require('dotenv').config();
-const express = require('express');
-const AppError = require('./utils/AppError');
+import 'dotenv/config';
+import express from 'express';
+import AppError from './utils/AppError.js';
 
 const app = express();
 app.use(express.json());

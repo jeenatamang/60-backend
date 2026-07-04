@@ -1,7 +1,7 @@
-const express = require('express');
-const cors = require('cors');
-const AppError = require('./utils/AppError');
-const watchlistRoutes = require('./routes/watchlist.routes');
+import express from 'express';
+import cors from 'cors';
+import AppError from './utils/AppError.js';
+import watchlistRoutes from './routes/watchlist.routes.js';
 
 const app = express();
 
@@ -23,4 +23,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-module.exports = app;
+export default app;

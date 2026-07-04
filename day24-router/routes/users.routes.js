@@ -1,4 +1,5 @@
-const express = require('express');
+import express from 'express';
+
 const router = express.Router();
 let users = [
   { id: 1, name: "Sandesh", email: "sandesh@example.com" },
@@ -36,4 +37,4 @@ router.delete('/:id', (req, res) => {
   res.status(200).json({ success: true, message: "User deleted" });
 });
 
-module.exports = router;
+export default router;

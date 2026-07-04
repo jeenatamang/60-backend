@@ -1,6 +1,7 @@
-const watchlist = require('../data/watchlist.data');
-const AppError = require('../utils/AppError');
-exports.getAll = (req, res, next) => {
+import watchlist from '../data/watchlist.data.js';
+import AppError from '../utils/AppError.js';
+
+export const getAll = (req, res, next) => {
   try {
     const { status } = req.query;
     let result = watchlist;
@@ -16,7 +17,8 @@ exports.getAll = (req, res, next) => {
     next(err);
   }
 };
-exports.getOne = (req, res, next) => {
+
+export const getOne = (req, res, next) => {
   try {
     const item = watchlist.find(i => i.id === parseInt(req.params.id));
     if (!item) throw new AppError("Item not found", 404);
@@ -29,7 +31,8 @@ exports.getOne = (req, res, next) => {
     next(err);
   }
 };
-exports.create = (req, res, next) => {
+
+export const create = (req, res, next) => {
   try {
     const { title, type } = req.body;
     const newItem = {
@@ -50,7 +53,7 @@ exports.create = (req, res, next) => {
   }
 };
 
-exports.update = (req, res, next) => {
+export const update = (req, res, next) => {
   try {
     const item = watchlist.find(i => i.id === parseInt(req.params.id));
     if (!item) throw new AppError("Item not found", 404);
@@ -66,7 +69,8 @@ exports.update = (req, res, next) => {
     next(err);
   }
 };
-exports.rate = (req, res, next) => {
+
+export const rate = (req, res, next) => {
   try {
     const item = watchlist.find(i => i.id === parseInt(req.params.id));
     if (!item) throw new AppError("Item not found", 404);
@@ -83,7 +87,8 @@ exports.rate = (req, res, next) => {
     next(err);
   }
 };
-exports.remove = (req, res, next) => {
+
+export const remove = (req, res, next) => {
   try {
     const index = watchlist.findIndex(i => i.id === parseInt(req.params.id));
     if (index === -1) throw new AppError("Item not found", 404);

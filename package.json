@@ -1,4 +1,8 @@
 {
+  "name": "60-backend",
+  "version": "1.0.0",
+  "description": "backend",
+  "type": "module",
   "dependencies": {
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",

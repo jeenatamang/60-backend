@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'fs';
 
 // 1. Write data to a file
 fs.writeFileSync('sample.txt', 'hello world');
@@ -10,5 +10,3 @@ fs.readFile('sample.txt', 'utf-8', (err, data) => {
         return;}
     console.log(data);
 });
-
-

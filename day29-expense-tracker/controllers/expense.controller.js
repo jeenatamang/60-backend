@@ -1,9 +1,13 @@
-const fs = require('fs');
-const path = require('path');
-const expenses = require('../data/expense.data');
-const AppError = require('../utils/AppError');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import expenses from '../data/expense.data.js';
+import AppError from '../utils/Apperror.js';
 
-exports.getAll = (req, res, next) => {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export const getAll = (req, res, next) => {
   try {
     let result = [...expenses];
     const { category, sort } = req.query;
@@ -31,7 +35,7 @@ exports.getAll = (req, res, next) => {
   }
 };
 
-exports.getOne = (req, res, next) => {
+export const getOne = (req, res, next) => {
   try {
     const expense = expenses.find(e => e.id === parseInt(req.params.id));
     if (!expense) throw new AppError('Expense not found', 404);
@@ -45,7 +49,7 @@ exports.getOne = (req, res, next) => {
   }
 };
 
-exports.create = (req, res, next) => {
+export const create = (req, res, next) => {
   try {
     const { title, amount, category, date, note } = req.body;
     const newExpense = {
@@ -67,7 +71,7 @@ exports.create = (req, res, next) => {
   }
 };
 
-exports.update = (req, res, next) => {
+export const update = (req, res, next) => {
   try {
     const expense = expenses.find(e => e.id === parseInt(req.params.id));
     if (!expense) throw new AppError('Expense not found', 404);
@@ -87,7 +91,7 @@ exports.update = (req, res, next) => {
   }
 };
 
-exports.remove = (req, res, next) => {
+export const remove = (req, res, next) => {
   try {
     const index = expenses.findIndex(e => e.id === parseInt(req.params.id));
     if (index === -1) throw new AppError('Expense not found', 404);
@@ -100,9 +104,10 @@ exports.remove = (req, res, next) => {
     next(err);
   }
 };
-exports.summary = (req, res, next) => {
+
+export const summary = (req, res, next) => {
   try {
-    const summary = expenses.reduce((acc, expense) => {
+    const summaryData = expenses.reduce((acc, expense) => {
       if (!acc[expense.category]) {
         acc[expense.category] = { count: 0, total: 0 };
       }
@@ -118,7 +123,7 @@ exports.summary = (req, res, next) => {
       message: 'Summary fetched successfully',
       data: {
         grandTotal: `Rs. ${grandTotal}`,
-        byCategory: summary
+        byCategory: summaryData
       }
     });
   } catch (err) {
@@ -126,7 +131,7 @@ exports.summary = (req, res, next) => {
   }
 };
 
-exports.exportCSV = (req, res, next) => {
+export const exportCSV = (req, res, next) => {
   try {
     const filePath = path.join(__dirname, '../exports/expenses.csv');
 
@@ -141,7 +146,7 @@ exports.exportCSV = (req, res, next) => {
     res.setHeader('Content-Disposition', 'attachment; filename="expenses.csv"');
     res.setHeader('Content-Type', 'text/csv');
 
-    const readStream = require('fs').createReadStream(filePath);
+    const readStream = fs.createReadStream(filePath);
     readStream.pipe(res);
   } catch (err) {
     next(err);

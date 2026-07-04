@@ -1,5 +1,6 @@
-const { body } = require('express-validator');
-exports.createItem = [
+import { body } from 'express-validator';
+
+export const createItem = [
   body('title')
     .trim()
     .notEmpty()
@@ -14,7 +15,7 @@ exports.createItem = [
     .withMessage('Type must be one of: movie, anime, series'),
 ];
 
-exports.updateItem = [
+export const updateItem = [
   body('status')
     .optional()
     .isIn(['plan_to_watch', 'watching', 'completed'])
@@ -29,7 +30,7 @@ exports.updateItem = [
     .withMessage('Title must be under 100 characters'),
 ];
 
-exports.rateItem = [
+export const rateItem = [
   body('rating')
     .notEmpty()
     .withMessage('Rating is required')

@@ -1,9 +1,13 @@
-require('dotenv').config();
-const express = require('express');
-const multer = require('multer');
-const fs = require('fs');
-const path = require('path');
-const AppError = require('./utils/AppError');
+import 'dotenv/config';
+import express from 'express';
+import multer from 'multer';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import AppError from './utils/Apperror.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(express.json());
