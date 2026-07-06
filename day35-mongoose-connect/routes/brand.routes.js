@@ -4,6 +4,7 @@ import * as controller from '../controllers/brand.controller.js';
 const router = express.Router();
 
 router.get('/stats', controller.stats);
+router.get('/category/:category', controller.getByCategory);
 router.get('/', controller.getAll);
 router.get('/:id', controller.getOne);
 router.post('/', controller.create);
