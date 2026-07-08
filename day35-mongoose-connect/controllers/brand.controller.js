@@ -178,3 +178,80 @@ export const stats = async (req, res, next) => {
     next(err);
   }
 };
+
+export const addHeroProduct = async (req, res, next) => {
+  try {
+    const brand = await Brand.findById(req.params.id);
+    if (!brand) throw new AppError('Brand not found', 404);
+
+    const { product_id, product_name, type, price, rating, tags, in_stock } = req.body;
+
+    if (!product_name || !type || !price) {
+      throw new AppError('product_name, type, and price are required', 400);
+    }
+
+    brand.hero_products.push({
+      product_id,
+      product_name,
+      type,
+      price,
+      rating,
+      tags: tags || [],
+      in_stock: in_stock !== undefined ? in_stock : true
+    });
+
+    await brand.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'Hero product added successfully',
+      data: brand
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const removeHeroProduct = async (req, res, next) => {
+  try {
+    const brand = await Brand.findById(req.params.id);
+    if (!brand) throw new AppError('Brand not found', 404);
+
+    const productIndex = brand.hero_products.findIndex(
+      p => p.product_id === req.params.product_id
+    );
+
+    if (productIndex === -1) {
+      throw new AppError('Product not found in this brand', 404);
+    }
+
+    brand.hero_products.splice(productIndex, 1);
+    await brand.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Hero product removed successfully',
+      data: brand
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const toggleCrueltyFree = async (req, res, next) => {
+  try {
+    const brand = await Brand.findById(req.params.id);
+    if (!brand) throw new AppError('Brand not found', 404);
+
+    brand.cruelty_free = !brand.cruelty_free;
+    await brand.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Brand is now ${brand.cruelty_free ? 'cruelty-free' : 'not cruelty-free'}`,
+      data: brand
+    });
+  } catch (err) {
+    next(err);
+  }
+};
