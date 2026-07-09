@@ -6,9 +6,7 @@ export const getAll = async (req, res, next) => {
     const { status } = req.query;
     let filter = {};
     if (status) filter.status = status;
-
     const items = await Watchlist.find(filter).sort({ createdAt: -1 });
-
     res.status(200).json({
       success: true,
       message: 'Watchlist fetched successfully',
@@ -16,9 +14,10 @@ export const getAll = async (req, res, next) => {
       data: items
     });
   } catch (err) {
-    next(err);
+    next(err); 
   }
 };
+
 export const getOne = async (req, res, next) => {
   try {
     const item = await Watchlist.findById(req.params.id);
@@ -42,13 +41,10 @@ export const create = async (req, res, next) => {
       data: item
     });
   } catch (err) {
-    if (err.name === 'ValidationError') {
-      const message = Object.values(err.errors)[0].message;
-      return next(new AppError(message, 400));
-    }
-    next(err);
+    next(err); 
   }
 };
+
 export const update = async (req, res, next) => {
   try {
     const item = await Watchlist.findByIdAndUpdate(
@@ -63,10 +59,6 @@ export const update = async (req, res, next) => {
       data: item
     });
   } catch (err) {
-    if (err.name === 'ValidationError') {
-      const message = Object.values(err.errors)[0].message;
-      return next(new AppError(message, 400));
-    }
     next(err);
   }
 };

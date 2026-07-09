@@ -15,13 +15,51 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error(`[ERROR] ${err.name}: ${err.message}`);
   if (err.name === 'CastError') {
     return res.status(400).json({
       success: false,
-      message: 'Invalid ID format'
+      message: `Invalid ${err.path}: ${err.value} is not a valid ID`
     });
   }
+
+  if (err.name === 'ValidationError') {
+    const messages = Object.values(err.errors).map(e => e.message);
+    return res.status(400).json({
+      success: false,
+      message: messages[0],
+      allErrors: messages 
+    });
+  }
+
+  if (err.code === 11000) {
+    const field = Object.keys(err.keyValue)[0];
+    return res.status(400).json({
+      success: false,
+      message: `${field} already exists — please use a different value`
+    });
+  }
+  if (err.name === 'MongoNetworkError') {
+    return res.status(500).json({
+      success: false,
+      message: 'Database connection failed — please try again later'
+    });
+  }
+
+  if (err.name === 'JsonWebTokenError') {
+    return res.status(401).json({
+      success: false,
+      message: 'Invalid token — please log in again'
+    });
+  }
+
+  if (err.name === 'TokenExpiredError') {
+    return res.status(401).json({
+      success: false,
+      message: 'Token expired — please log in again'
+    });
+  }
+
   const statusCode = err.statusCode || 500;
   res.status(statusCode).json({
     success: false,
