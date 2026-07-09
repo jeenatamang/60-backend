@@ -1,30 +1,31 @@
-import watchlist from '../data/watchlist.data.js';
+import Watchlist from '../models/Watchlist.model.js';
 import AppError from '../utils/AppError.js';
 
-export const getAll = (req, res, next) => {
+export const getAll = async (req, res, next) => {
   try {
     const { status } = req.query;
-    let result = watchlist;
-    if (status) {
-      result = watchlist.filter(item => item.status === status);
-    }
+    let filter = {};
+    if (status) filter.status = status;
+
+    const items = await Watchlist.find(filter).sort({ createdAt: -1 });
+
     res.status(200).json({
       success: true,
-      message: "Watchlist fetched successfully",
-      data: result
+      message: 'Watchlist fetched successfully',
+      count: items.length,
+      data: items
     });
   } catch (err) {
     next(err);
   }
 };
-
-export const getOne = (req, res, next) => {
+export const getOne = async (req, res, next) => {
   try {
-    const item = watchlist.find(i => i.id === parseInt(req.params.id));
-    if (!item) throw new AppError("Item not found", 404);
+    const item = await Watchlist.findById(req.params.id);
+    if (!item) throw new AppError('Item not found', 404);
     res.status(200).json({
       success: true,
-      message: "Item fetched successfully",
+      message: 'Item fetched successfully',
       data: item
     });
   } catch (err) {
@@ -32,55 +33,56 @@ export const getOne = (req, res, next) => {
   }
 };
 
-export const create = (req, res, next) => {
+export const create = async (req, res, next) => {
   try {
-    const { title, type } = req.body;
-    const newItem = {
-      id: watchlist.length + 1,
-      title,
-      type,
-      status: "plan_to_watch",
-      rating: null
-    };
-    watchlist.push(newItem);
+    const item = await Watchlist.create(req.body);
     res.status(201).json({
       success: true,
-      message: "Item added to watchlist",
-      data: newItem
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const update = (req, res, next) => {
-  try {
-    const item = watchlist.find(i => i.id === parseInt(req.params.id));
-    if (!item) throw new AppError("Item not found", 404);
-    const { title, status } = req.body;
-    if (title) item.title = title;
-    if (status) item.status = status;
-    res.status(200).json({
-      success: true,
-      message: "Item updated successfully",
+      message: 'Item added to watchlist',
       data: item
     });
   } catch (err) {
+    if (err.name === 'ValidationError') {
+      const message = Object.values(err.errors)[0].message;
+      return next(new AppError(message, 400));
+    }
+    next(err);
+  }
+};
+export const update = async (req, res, next) => {
+  try {
+    const item = await Watchlist.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+    if (!item) throw new AppError('Item not found', 404);
+    res.status(200).json({
+      success: true,
+      message: 'Item updated successfully',
+      data: item
+    });
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      const message = Object.values(err.errors)[0].message;
+      return next(new AppError(message, 400));
+    }
     next(err);
   }
 };
 
-export const rate = (req, res, next) => {
+export const rate = async (req, res, next) => {
   try {
-    const item = watchlist.find(i => i.id === parseInt(req.params.id));
-    if (!item) throw new AppError("Item not found", 404);
-    if (item.status !== "completed") {
-      throw new AppError("You can only rate completed items", 400);
+    const item = await Watchlist.findById(req.params.id);
+    if (!item) throw new AppError('Item not found', 404);
+    if (item.status !== 'completed') {
+      throw new AppError('You can only rate completed items', 400);
     }
     item.rating = req.body.rating;
+    await item.save();
     res.status(200).json({
       success: true,
-      message: "Rating saved",
+      message: 'Rating saved',
       data: item
     });
   } catch (err) {
@@ -88,14 +90,13 @@ export const rate = (req, res, next) => {
   }
 };
 
-export const remove = (req, res, next) => {
+export const remove = async (req, res, next) => {
   try {
-    const index = watchlist.findIndex(i => i.id === parseInt(req.params.id));
-    if (index === -1) throw new AppError("Item not found", 404);
-    watchlist.splice(index, 1);
+    const item = await Watchlist.findByIdAndDelete(req.params.id);
+    if (!item) throw new AppError('Item not found', 404);
     res.status(200).json({
       success: true,
-      message: "Item removed from watchlist"
+      message: 'Item removed from watchlist'
     });
   } catch (err) {
     next(err);
