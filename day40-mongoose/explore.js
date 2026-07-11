@@ -5,14 +5,13 @@ await mongoose.connect(process.env.MONGO_URI);
 console.log('Connected to MongoDB');
 
 const productSchema = new mongoose.Schema({
-  // Basic types
   name: String,
   price: Number,
   inStock: Boolean,
-  tags: [String],          // array of strings
+  tags: [String],         
   createdAt: Date,
 
-  // With validation
+
   title: {
     type: String,
     required: [true, 'Title is required'],
@@ -22,7 +21,6 @@ const productSchema = new mongoose.Schema({
     maxlength: [100, 'Title must be under 100 characters']
   },
 
-  // Enum — only specific values allowed
   category: {
     type: String,
     enum: {
@@ -139,7 +137,6 @@ console.log('Price in rupees:', laptop.priceInRupees);
 console.log('Is expensive:', laptop.isExpensive);
 
 
-// Insert a few more products
 await Product.create([
   { title: 'Python Book', price: 45, category: 'books', rating: 4.2, discount: 0 },
   { title: 'T-Shirt', price: 25, category: 'clothing', rating: 3.8, discount: 20 },
@@ -157,20 +154,17 @@ console.log('Products under $50:', cheapProducts.map(p => `${p.title} ($${p.pric
 
 console.log('\n--- Query Chaining ---');
 
-// Find, select specific fields, sort, limit
+
 const topRated = await Product
   .find({ rating: { $gte: 4.5 } })
-  .select('title price rating')  // only these fields
+  .select('title price rating')  
   .sort({ rating: -1 })
   .limit(3);
 
 console.log('Top rated products:', topRated);
 
-// Count documents
 const bookCount = await Product.countDocuments({ category: 'books' });
 console.log('Total books:', bookCount);
-
-// Check if a document exists
 const hasExpensive = await Product.exists({ price: { $gt: 1000 } });
 console.log('Has expensive product:', !!hasExpensive);
 
