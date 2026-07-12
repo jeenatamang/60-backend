@@ -126,7 +126,7 @@ jobSchema.statics.getHighPriority = function () {
 
 jobSchema.pre('save', function () {
   if (this.isModified('status') && this.status === 'offer') {
-    console.log(`🎉 Offer received from ${this.company} for ${this.role}!`);
+    console.log(`Offer received from ${this.company} for ${this.role}!`);
   }
 });
 
