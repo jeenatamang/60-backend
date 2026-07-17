@@ -9,12 +9,14 @@ import {
   updateStatus,
   addNote,
   remove,
-  stats
+  stats,
+  analytics
 } from '../controllers/job.controller.js';
 
 const router = express.Router();
 
 router.get('/stats', stats);
+router.get('/analytics', analytics);
 router.get('/active', getActive);
 router.get('/high-priority', getHighPriority);
 router.get('/', getAll);

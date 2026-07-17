@@ -9,12 +9,14 @@ import {
   stats,
   addHeroProduct,
   removeHeroProduct,
-  toggleCrueltyFree
+  toggleCrueltyFree,
+  productAnalytics
 } from '../controllers/brand.controller.js';
 
 const router = express.Router();
 
 router.get('/stats', stats);
+router.get('/product-analytics', productAnalytics);
 router.get('/category/:category', getByCategory);
 router.get('/', getAll);
 router.get('/:id', getOne);

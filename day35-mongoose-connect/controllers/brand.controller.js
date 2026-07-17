@@ -255,3 +255,59 @@ export const toggleCrueltyFree = async (req, res, next) => {
     next(err);
   }
 };
+
+export const productAnalytics = async (req, res, next) => {
+  try {
+    const priceByBrand = await Brand.aggregate([
+      { $unwind: '$hero_products' },
+      {
+        $group: {
+          _id: '$brand_name',
+          avgPrice: { $avg: '$hero_products.price' },
+          totalProducts: { $sum: 1 },
+          inStockCount: {
+            $sum: { $cond: ['$hero_products.in_stock', 1, 0] }
+          }
+        }
+      },
+      { $sort: { avgPrice: -1 } }
+    ]);
+
+    const mostExpensive = await Brand.aggregate([
+      { $unwind: '$hero_products' },
+      { $sort: { 'hero_products.price': -1 } },
+      { $limit: 5 },
+      {
+        $project: {
+          brand_name: 1,
+          product: '$hero_products.product_name',
+          price: '$hero_products.price',
+          type: '$hero_products.type',
+          _id: 0
+        }
+      }
+    ]);
+
+    const stockSummary = await Brand.aggregate([
+      { $unwind: '$hero_products' },
+      {
+        $group: {
+          _id: '$hero_products.in_stock',
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+
+    res.status(200).json({
+      success: true,
+      message: 'Product analytics fetched',
+      data: {
+        priceByBrand,
+        mostExpensive,
+        stockSummary
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+};
