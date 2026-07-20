@@ -2,9 +2,14 @@ import 'dotenv/config';
 import express from 'express';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
+import cors from 'cors';
 import User from './user.js';
 
 const app = express();
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
 app.use(express.json());
 
 mongoose.connect(process.env.MONGO_URI)
