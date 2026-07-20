@@ -35,7 +35,7 @@ app.post('/register', async (req, res) => {
     const user = await User.create({ name, email, password });
     
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.status(201).json({ token });
+    res.status(201).json({ token, user: { id: user._id, name: user.name, email: user.email } });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -51,7 +51,7 @@ app.post('/login', async (req, res) => {
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.json({ token });
+    res.json({ token, user: { id: user._id, name: user.name, email: user.email } });
   } catch (err) {
     res.status(500).json({ error: 'Login failed' });
   }
